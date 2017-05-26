@@ -2,29 +2,49 @@ import pygame
 from inputmanager import *
 from gamemanager import *
 from playerbullet import *
+from point import *
+from renderer import *
 
 class Player:
     def __init__(self):
-        self.x = 0
-        self.y = 0
-        self.image = pygame.image.load("resources/player.png")
+        self.position = Point()
+        self.renderer = SpriteRenderer(pygame.image.load("resources/player.png"))
 
-    def draw(self, screen):
-        screen.blit(self.image, (self.x - self.image.get_width() / 2,
-                                 self.y - self.image.get_height() / 2))
+        self.cool_down_period = 10
+        self.cool_down_counter = 0
+        self.shoot_disabled = False
+
+        self.constraints = None
+        self.active = True
 
     def run(self):
+        self.move()
+        self.shoot()
+
+    def move(self):
         if input_manager.right_pressed:
-            self.x += 5
+            self.position.add_up(5, 0)
         if input_manager.left_pressed:
-            self.x -= 5
+            self.position.add_up(-5, 0)
         if input_manager.down_pressed:
-            self.y += 5
+            self.position.add_up(0, 5)
         if input_manager.up_pressed:
-            self.y -= 5
+            self.position.add_up(0, -5)
+
+        if self.constraints is not None:
+            self.constraints.make(self.position)
+
+    def shoot(self):
+        if self.shoot_disabled:
+
+            self.cool_down_counter += 1
+            if self.cool_down_counter >= 10:
+                self.shoot_disabled = False
+                self.cool_down_counter = 0
+            return
 
         if input_manager.space_pressed:
             player_bullet = PlayerBullet()
-            player_bullet.x = self.x
-            player_bullet.y = self.y - 20
+            player_bullet.position.copy(self.position.add(0, -10))
             game_manager.add(player_bullet)
+            self.shoot_disabled = True

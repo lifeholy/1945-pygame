@@ -1,15 +1,20 @@
 import pygame
-
+from point import *
+from renderer import *
+from boxcollider import *
+from physics import *
+from enemy import *
 
 class PlayerBullet:
     def __init__(self):
-        self.x = 0
-        self.y = 0
-        self.image = pygame.image.load("resources/player-bullet.png")
+        self.position = Point()
+        self.renderer = loadSpriteRenderer("resources/player-bullet.png")
+        self.box_collider = BoxCollider(self.position, 9, 20)
+        self.active = True
 
     def run(self):
-        self.y -= 10
+        self.position.add_up(0, -10)
 
-    def draw(self, screen):
-        screen.blit(self.image, (self.x - self.image.get_width() / 2,
-                                 self.y - self.image.get_height() / 2))
+        target = physics.check_contact(self.box_collider)
+        if target is not None and type(target) is Enemy:
+            target.active = False

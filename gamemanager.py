@@ -7,10 +7,14 @@ class GameManager:
 
     def run(self):
         for game_object in self.game_objects:
-            game_object.run()
+            if game_object.active:
+                game_object.run()
 
     def draw(self, screen):
         for game_object in self.game_objects:
-            game_object.draw(screen)
+            if game_object.active:
+                renderer = game_object.renderer
+                position = game_object.position
+                renderer.draw(screen, position)
 
 game_manager = GameManager()

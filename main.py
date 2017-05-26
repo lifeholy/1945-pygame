@@ -3,6 +3,8 @@ from inputmanager import *
 from gamemanager import *
 from player import *
 from background import *
+from constraints import *
+from enemy import *
 
 def init_pygame():
     pygame.init()
@@ -22,7 +24,15 @@ screen = init_pygame()
 clock = pygame.time.Clock()
 
 game_manager.add(Background())
-game_manager.add(Player())
+player = Player()
+player.constraints = Constraints(0, 400, 0, 600)
+
+game_manager.add(player)
+
+enemy = Enemy()
+enemy.position.x = 200
+
+game_manager.add(enemy)
 
 loop = True
 
