@@ -36,6 +36,13 @@ game_manager.add(enemy)
 
 loop = True
 
+pygame.mixer.music.load("resources/sounds/bgm.mp3")
+pygame.mixer.music.play(-1)
+
+
+
+#spawner
+
 while loop:
     events = pygame.event.get()
 

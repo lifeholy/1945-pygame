@@ -7,9 +7,10 @@ class Physics:
 
     def check_contact(self, box_collider):
         for game_object in self.game_objects:
-            box_collider1 = box_collider
-            box_collider2 = game_object.box_collider
-            if box_collider1.check_collide(box_collider2):
-                return game_object
+            if game_object.active:
+                box_collider1 = box_collider
+                box_collider2 = game_object.box_collider
+                if box_collider1.check_collide(box_collider2):
+                    return game_object
 
 physics = Physics()

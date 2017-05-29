@@ -1,6 +1,4 @@
-import pygame
 from inputmanager import *
-from gamemanager import *
 from playerbullet import *
 from point import *
 from renderer import *
@@ -16,6 +14,10 @@ class Player:
 
         self.constraints = None
         self.active = True
+        self.position.y = 500
+        self.position.x = 200
+
+        self.shoot_sound = pygame.mixer.Sound("resources/sounds/shoot.wav")
 
     def run(self):
         self.move()
@@ -36,7 +38,6 @@ class Player:
 
     def shoot(self):
         if self.shoot_disabled:
-
             self.cool_down_counter += 1
             if self.cool_down_counter >= 10:
                 self.shoot_disabled = False
@@ -44,6 +45,8 @@ class Player:
             return
 
         if input_manager.space_pressed:
+            self.shoot_sound.stop()
+            self.shoot_sound.play()
             player_bullet = PlayerBullet()
             player_bullet.position.copy(self.position.add(0, -10))
             game_manager.add(player_bullet)

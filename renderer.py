@@ -13,7 +13,33 @@ class SpriteRenderer:
                                  position.y - height / 2))
 
 
+class Animation:
+    def __init__(self, image_list):
+        self.images = image_list
+        self.width = self.images[0].get_width()
+        self.height = self.images[0].get_height()
+        self.image_index = 0
+        self.has_ended = False
+        self.counter = 0
 
+    def draw(self, screen, position):
+        image = self.images[self.image_index]
+        screen.blit(image, (position.x - self.width / 2,
+                            position.y - self.height / 2))
+        self.counter += 1
+        if self.counter == 3:
+            self.counter = 0
+            self.image_index = (self.image_index + 1) % len(self.images)
+            if self.image_index == len(self.images) - 1:
+                self.has_ended = True
 
 def loadSpriteRenderer(path):
     return SpriteRenderer(pygame.image.load(path))
+
+def loadAnimation(paths):
+    # image_list = []
+    # for path in paths:
+    #     image = pygame.image.load(path)
+    #     image_list.append(image)
+    # return Animation(image_list)
+    return Animation([pygame.image.load(path) for path in paths])
